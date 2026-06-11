@@ -6,7 +6,8 @@ import com.bexnt.authserver.user.entity.UserEntity;
 public class UserMapper {
     private UserMapper() {
     }
-    public static UserResponse toResponse(UserEntity user){
+
+    public static UserResponse toResponse(UserEntity user) {
         return new UserResponse(
                 user.getId(),
                 user.getEmail(),
