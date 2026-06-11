@@ -28,6 +28,7 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
 }
 
 tasks.named('test') {
