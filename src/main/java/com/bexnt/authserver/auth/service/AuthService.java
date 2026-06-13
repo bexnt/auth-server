@@ -5,6 +5,7 @@ import com.bexnt.authserver.auth.dto.LoginRequest;
 import com.bexnt.authserver.auth.dto.RegisterRequest;
 import com.bexnt.authserver.exception.EmailAlreadyExistsException;
 import com.bexnt.authserver.exception.InvalidCredentialsException;
+import com.bexnt.authserver.security.jwt.JwtService;
 import com.bexnt.authserver.user.entity.Role;
 import com.bexnt.authserver.user.entity.UserEntity;
 import com.bexnt.authserver.user.repository.UserRepository;
@@ -15,10 +16,12 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public AuthResponse register(RegisterRequest request) {
@@ -33,9 +36,11 @@ public class AuthService {
                 passwordHash,
                 Role.USER
         );
-
         userRepository.save(user);
-        return new AuthResponse("temporary-token", "Bearer");
+
+        String token = jwtService.generateToken(request.email());
+
+        return new AuthResponse(token, "Bearer");
     }
 
     public AuthResponse login(LoginRequest request) {
