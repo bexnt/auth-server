@@ -1,6 +1,7 @@
 package com.bexnt.authserver.auth.controller;
 
 import com.bexnt.authserver.auth.dto.AuthResponse;
+import com.bexnt.authserver.auth.dto.LoginRequest;
 import com.bexnt.authserver.auth.dto.RegisterRequest;
 import com.bexnt.authserver.auth.service.AuthService;
 import jakarta.validation.Valid;
@@ -26,4 +27,12 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> loginUser(@Valid @RequestBody LoginRequest request) {
+        AuthResponse response = authService.login(request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }

@@ -1,8 +1,10 @@
 package com.bexnt.authserver.auth.service;
 
 import com.bexnt.authserver.auth.dto.AuthResponse;
+import com.bexnt.authserver.auth.dto.LoginRequest;
 import com.bexnt.authserver.auth.dto.RegisterRequest;
 import com.bexnt.authserver.exception.EmailAlreadyExistsException;
+import com.bexnt.authserver.exception.InvalidCredentialsException;
 import com.bexnt.authserver.user.entity.Role;
 import com.bexnt.authserver.user.entity.UserEntity;
 import com.bexnt.authserver.user.repository.UserRepository;
@@ -36,4 +38,16 @@ public class AuthService {
         return new AuthResponse("temporary-token", "Bearer");
     }
 
+    public AuthResponse login(LoginRequest request) {
+        UserEntity user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new InvalidCredentialsException());
+
+        boolean passwordMatches = passwordEncoder.matches(request.password(), user.getPasswordHash());
+
+        if (!passwordMatches) {
+            throw new InvalidCredentialsException();
+        }
+
+        return new AuthResponse("temporary-token", "Bearer");
+    }
 }
