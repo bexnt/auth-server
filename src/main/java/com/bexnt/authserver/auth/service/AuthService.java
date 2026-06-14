@@ -52,7 +52,8 @@ public class AuthService {
         if (!passwordMatches) {
             throw new InvalidCredentialsException();
         }
+        String token = jwtService.generateToken(user.getEmail());
 
-        return new AuthResponse("temporary-token", "Bearer");
+        return new AuthResponse(token, "Bearer");
     }
 }
